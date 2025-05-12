@@ -11,7 +11,7 @@ public class CameraFollow : MonoBehaviour
     // 可选：设定摄像机相对于玩家的Y轴偏移（稍微高一点或低一点）
     public float yOffset = 4.9f;
     public float initial = 0;
-    public float smoothSpeed = 0.125f; // 平滑跟随的速度
+    public float smoothSpeed = 0.02f; // 平滑跟随的速度
     private Vector3 offset;    // 摄像机和玩家之间的偏移
     public PlayerController playerController;  // 用来引用 PlayerController
 
@@ -34,23 +34,36 @@ public class CameraFollow : MonoBehaviour
         if (playerController.Initializationiscomplete > 1)
         {
 
-            if (player.position.y > 8f)
-            {
-                //Debug.Log("进了...............");
-                offset = transform.position - player.position; // 计算摄像机和玩家之间的偏移
-                offset.y = 1; // 设置摄像机和玩家之间的偏移为1
-                Vector3 desiredPosition = transform.position;// 计算摄像机的目标位置：玩家位置 + 偏移
-                desiredPosition.y = 4.9f + player.position.y - 8f;// 计算摄像机的目标位置：4.9+玩家超越8后的位置 - 8
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);// 使摄像机平滑跟随玩家  Vector3.Lerp(a, b, t) 是 Unity 的一个函数，用来平滑地从 a 位置过渡到 b 位置，t 是一个平滑的插值参数，通常在 0 到 1 之间。
-                transform.position = smoothPosition; // 设置摄像机的新位置
+            // 计算当前摄像机位置与玩家位置的偏移量
+            offset = transform.position - player.position;
+            // 将偏移量的 y 轴值固定为 1，保证摄像机和玩家在 y 轴上始终保持一定的相对距离
+            offset.y = 1;
+            // 创建一个新的向量 desiredPosition，初始值为当前摄像机的位置
+            Vector3 desiredPosition = transform.position;
+            // 计算期望的摄像机 y 轴位置
+            // yOffset 是摄像机的初始 y 轴偏移量（通常为 4.9）
+            // player.position.y - 8f 表示玩家位置超出 y 轴 8 的部分
+            // 这样计算可以让摄像机随着玩家上升和下落而移动
+            desiredPosition.y = yOffset + player.position.y - 8f;
 
-            }
-            
-                
-        
-            
-            
-           
+
+            // Mathf.Max 函数用于返回两个值中的较大值
+            // 这里保证了 desiredPosition.y 不会小于 yOffset（即 4.9）
+            // 从而避免摄像机位置过低
+            desiredPosition.y = Mathf.Max(desiredPosition.y, yOffset);
+
+
+            // Vector3.Lerp 是 Unity 中的线性插值函数
+            // 它会在当前摄像机位置 transform.position 和期望位置 desiredPosition 之间进行插值
+            // smoothSpeed 是插值的速度，取值范围通常在 0 到 1 之间
+            // 该函数会根据 smoothSpeed 的值逐渐将摄像机从当前位置移动到期望位置
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+
+            // 将摄像机的位置更新为平滑插值后的位置
+            // 这样摄像机就会平滑地跟随玩家移动
+            transform.position = smoothPosition;
+
+
 
 
 
