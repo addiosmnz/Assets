@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && isGrounded == true)
         {
-            playerRb.velocity = new Vector2(0, 15f);
+            playerRb.velocity = new Vector2(0, 13f);
 
         }
     }
