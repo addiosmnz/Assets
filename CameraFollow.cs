@@ -36,23 +36,18 @@ public class CameraFollow : MonoBehaviour
 
             if (player.position.y > 8f)
             {
+                //Debug.Log("进了...............");
                 offset = transform.position - player.position; // 计算摄像机和玩家之间的偏移
                 offset.y = 1; // 设置摄像机和玩家之间的偏移为1
                 Vector3 desiredPosition = transform.position;// 计算摄像机的目标位置：玩家位置 + 偏移
                 desiredPosition.y = 4.9f + player.position.y - 8f;// 计算摄像机的目标位置：4.9+玩家超越8后的位置 - 8
                 Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);// 使摄像机平滑跟随玩家  Vector3.Lerp(a, b, t) 是 Unity 的一个函数，用来平滑地从 a 位置过渡到 b 位置，t 是一个平滑的插值参数，通常在 0 到 1 之间。
-
-
-                if (playerController.isGrounded == false)
-                {
-                    transform.position = smoothPosition; // 设置摄像机的新位置
-                }
-                else {
-                    smoothPosition.y = 4.9f;   
-                    transform.position = smoothPosition; // 设置摄像机的新位置
-                }
+                transform.position = smoothPosition; // 设置摄像机的新位置
 
             }
+            
+                
+        
             
             
            
